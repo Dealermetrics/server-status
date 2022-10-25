@@ -8,6 +8,9 @@ import fastapi
 
 app = fastapi.FastAPI()
 
+@app.get("/")
+async def get_root():
+    return {"status": 200}    
 
 @app.get("/api/systems")
 def system_check():
