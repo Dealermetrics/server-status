@@ -1,0 +1,21 @@
+<mat-spinner *ngIf="keys(servers).length === 0" class="ml-auto"></mat-spinner>
+<mat-card style="width: 90%" *ngIf="keys(servers).length !== 0">
+  <mat-card-title class="text-center">{{ overall() }}</mat-card-title>
+  <div *ngFor="let server of keys(servers || {})" class="mb-2">
+    <mat-accordion>
+      <mat-expansion-panel hideToggle expanded> 
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ server }}</mat-panel-title>
+          <i class="text-right material-symbols-outlined">
+            {{servers[server]['status'] == 200 ? 'check_circle' : 'close'}}
+          </i>
+        </mat-expansion-panel-header>
+        Server is {{ description(server) }} with status code
+          <code>{{servers[server]['status'] ? servers[server]['status'] : "0"}}</code>
+        <br>
+        <code *ngIf="error(server)" lang="java">Error: {{ error(server) }}</code>
+        <pre class="terminal ms-0">{{ logs(server) }}</pre>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</mat-card>

@@ -1,55 +1,73 @@
 import os
 import re
-import traceback
 import subprocess
-import requests
+import traceback
+from typing import Literal
 
 import fastapi
+import requests
+from fastapi.middleware.cors import CORSMiddleware
 
 app = fastapi.FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"])
 
-@app.get("/")
-async def get_root():
-    return {"status": 200}    
 
-@app.get("/api/systems")
+@app.get("/api/status")
+async def status() -> Literal[200]:
+    return 200
+
+
+def get_server_logs(server_domain) -> str:
+    if os.name == "nt":
+        with open("test/logs.txt", encoding="utf-8") as fp:
+            return fp.read()
+
+    process = subprocess.run(
+        "systemctl status {}.service".format(server_domain.split(".")[0]),
+        stdout=subprocess.PIPE,
+        shell=True,
+    )
+    return process.stdout
+
+
+@app.get("/api/servers")
 def system_check():
-    if os.name == "nt": dir = "test/sites-enabled"
-    else: dir = "/etc/nginx/sites-enabled"
+    if os.name == "nt":
+        dir = "test/sites-enabled"
+    else:
+        dir = "/etc/nginx/sites-enabled"
 
-    systems = {}
+    servers = {}
     for file in os.listdir(dir):
+        if file.startswith("."): continue
+
         with open(os.path.join(dir, file)) as fp:
             content = fp.read()
 
         server_domains = re.findall("server_name\s+(.*?)[;]", content)
-        if not server_domains: 
+        if not server_domains:
             continue  # TODO: implement failing system
 
         server_domain: str = server_domains[0].strip()
+        if "status" in server_domain:
+            url = "status.caedenph.com/api/status"  # avoid infinitely calling itself
+        else:
+            url = server_domain
+
         try:
-            response = requests.get(f"https://{server_domain}")
-            systems[server_domain] = {
-                "status": response.status_code
-            }
-        except Exception:
-            process = subprocess.run(
-                "systemctl status {}.service".format(
-                    server_domain.split(".")[0]
-                ),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                shell=True
-            )
-            systems[server_domain] = {
-                "error": traceback.format_exc(),
-                "logs": {
-                    "stdout": process.stdout,
-                    "stderr": process.stderr
-                }
+            response = requests.get(f"https://{url}")
+            servers[server_domain] = {"status": response.status_code}
+        except Exception as exc:
+            logs = get_server_logs(server_domain)
+            error = traceback.format_exception(exc)
+
+            servers[server_domain] = {
+                "error": error[-1],  # last error line
+                "logs": logs,  # systemctl output
             }
 
-    return systems
+    return servers
+
 
 if __name__ == "__main__":
     import uvicorn

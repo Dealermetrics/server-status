@@ -1,0 +1,22 @@
+● mempi.service - Start main server
+     Loaded: loaded (/etc/systemd/system/mempi.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2022-10-25 00:04:43 UTC; 21h ago
+   Main PID: 1187 (npm exec webser)
+      Tasks: 23 (limit: 1143)
+     Memory: 61.3M
+        CPU: 3.610s
+     CGroup: /system.slice/mempi.service
+             ├─1187 "npm exec webserver 4200" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             ├─1198 sh -c -- "webserver 4200"
+             └─1199 node /home/ubuntu/.npm/_npx/153a9b59af4cdbd2/node_modules/.bin/webserver 4200
+
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]: Fast-forward
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  dist/mempi/index.html                                              | 7 ++++---
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  dist/mempi/{main.4d4ae058229a926c.js => main.4fe9f7b2012a4ff2.js}  | 2 +-
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  .../{styles.fbe2abe08c8bd7d2.css => styles.cb9b8894b627c10a.css}   | 2 +-
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  3 files changed, 6 insertions(+), 5 deletions(-)
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  rename dist/mempi/{main.4d4ae058229a926c.js => main.4fe9f7b2012a4ff2.js} (57%)
+Oct 25 00:04:43 ip-172-31-88-14 git[1185]:  rename dist/mempi/{styles.fbe2abe08c8bd7d2.css => styles.cb9b8894b627c10a.css} (99%)
+Oct 25 00:04:43 ip-172-31-88-14 systemd[1]: Started Start main server.
+Oct 25 00:04:45 ip-172-31-88-14 npx[1199]: 2022-10-25_00:04:45 webserver:         Copyright 2022 Sleepless Software Inc.  All Rights Reserved - sleepless.com
+Oct 25 00:04:45 ip-172-31-88-14 npx[1199]: 2022-10-25_00:04:45 webserver:         Listening on port 4200, serving from directory "/home/ubuntu/mempi/dist/mempi"
