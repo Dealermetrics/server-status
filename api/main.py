@@ -39,7 +39,7 @@ def system_check():
 
     servers = {}
     for file in os.listdir(dir):
-        if file.startswith("."): continue
+        if "status-api" in file: continue
 
         with open(os.path.join(dir, file)) as fp:
             content = fp.read()
