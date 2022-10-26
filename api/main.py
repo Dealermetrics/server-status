@@ -12,7 +12,7 @@ app = fastapi.FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"])
 
 
-@app.get("/api/status")
+@app.get("/status")
 async def status() -> Literal[200]:
     return 200
 
@@ -30,7 +30,7 @@ def get_server_logs(server_domain) -> str:
     return process.stdout
 
 
-@app.get("/api/servers")
+@app.get("/servers")
 def system_check():
     if os.name == "nt":
         dir = "test/sites-enabled"
@@ -39,7 +39,7 @@ def system_check():
 
     servers = {}
     for file in os.listdir(dir):
-        if "status-api" in file: continue
+        if "status" in file: continue  # ignore the frontend status website
 
         with open(os.path.join(dir, file)) as fp:
             content = fp.read()
@@ -49,8 +49,8 @@ def system_check():
             continue  # TODO: implement failing system
 
         server_domain: str = server_domains[0].strip()
-        if "status" in server_domain:
-            url = "status.caedenph.com/api/status"  # avoid infinitely calling itself
+        if "api" in server_domain:
+            url = "api.caedenph.com/status"  # avoid recursively calling itself
         else:
             url = server_domain
 

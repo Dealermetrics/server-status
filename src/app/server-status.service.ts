@@ -6,7 +6,7 @@ import { Servers } from './server';
   providedIn: 'root'
 })
 export class StatusService {
-  private url = "https://status.caedenph.com/api/servers"
+  private url = "https://api.caedenph.com/servers"
 
   async getServerStatus(): Promise<Servers> {
     const response = await axios.get(this.url);
