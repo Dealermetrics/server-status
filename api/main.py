@@ -2,7 +2,7 @@ import os
 import re
 import subprocess
 import traceback
-from typing import Literal
+from typing import Any, Literal
 
 import fastapi
 import requests
@@ -17,7 +17,7 @@ async def status() -> Literal[200]:
     return 200
 
 
-def get_server_logs(server_domain) -> str:
+def get_server_logs(server_domain: str) -> str:
     if os.name == "nt":
         with open("test/logs.txt", encoding="utf-8") as fp:
             return fp.read()
@@ -37,20 +37,21 @@ def system_check():
     else:
         dir = "/etc/nginx/sites-enabled"
 
-    servers = {}
+    servers: dict[str, dict[str, Any]] = {}
     for file in os.listdir(dir):
         if "status" in file: continue  # ignore the frontend status website
+        if "default" in file: continue
 
         with open(os.path.join(dir, file)) as fp:
             content = fp.read()
 
-        server_domains = re.findall("server_name\s+(.*?)[;]", content)
+        server_domains = re.findall(r"server_name\s+(.*?)[;]", content)
         if not server_domains:
-            continue  # TODO: implement failing system
+            raise Exception()  # TODO: implement failing system
 
         server_domain: str = server_domains[0].strip()
         if "api" in server_domain:
-            url = "api.caedenph.com/status"  # avoid recursively calling itself
+            url = "api.dealermetrics.co.uk/status"  # avoid recursively calling itself
         else:
             url = server_domain
 
