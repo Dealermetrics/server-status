@@ -56,7 +56,7 @@ def system_check():
             url = server_domain
 
         try:
-            response = requests.get(f"https://{url}")
+            response = requests.get(f"https://{url}/status")
             servers[server_domain] = {"status": response.status_code}
         except Exception as exc:
             logs = get_server_logs(server_domain)
