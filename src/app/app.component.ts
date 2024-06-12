@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     const server = this.servers[serverName];
     const logs = server["logs"];
     
-    if (!logs) return "No problems in the workspace";
+    if (!logs) throw new Error();
     return logs;
   }
   overall(): string {

@@ -14,7 +14,7 @@
           <code>{{servers[server]['status'] ? servers[server]['status'] : "0"}}</code>
         <br>
         <code *ngIf="error(server)" lang="java">Error: {{ error(server) }}</code>
-        <pre class="terminal ms-0">{{ logs(server) }}</pre>
+        <pre *ngIf="error(server)" class="terminal ms-0">{{ logs(server) }}</pre>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
