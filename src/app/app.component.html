@@ -13,7 +13,8 @@
         Server is {{ description(server) }} with status code
           <code>{{servers[server]['status'] ? servers[server]['status'] : "0"}}</code>
         <br>
-        <code *ngIf="error(server)" lang="java">Error: {{ error(server) }}</code>
+        <p *ngIf="servers[server]['status'] != 200">We apologize for any inconvenience you may be experiencing. Our team has identified the issue and wants to assure you that we're taking it seriously. Our skilled developers are already hard at work implementing a solution to resolve this problem as quickly as possible. We appreciate your patience and understanding during this time. Rest assured, we're committed to providing you with the best possible experience, and we'll have everything running smoothly again very soon. Thank you for your continued support.</p>
+        <p *ngIf="error(server)">Error: <code lang="java">{{ error(server) }}</code></p>
         <pre *ngIf="error(server)" class="terminal ms-0">{{ logs(server) }}</pre>
       </mat-expansion-panel>
     </mat-accordion>
